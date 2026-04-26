@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-<head<link rel="icon" type="image/svg+xml" href="/favicon.svg">
->
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Power Pack Systems — Solar & Battery Energy Storage</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cline x1='20' y1='20' x2='20' y2='100' stroke='%230a0a0a' stroke-width='3' stroke-linecap='square'/%3E%3Cline x1='20' y1='20' x2='36' y2='20' stroke='%230a0a0a' stroke-width='3' stroke-linecap='square'/%3E%3Cline x1='20' y1='100' x2='36' y2='100' stroke='%230a0a0a' stroke-width='3' stroke-linecap='square'/%3E%3Cline x1='100' y1='20' x2='100' y2='100' stroke='%230a0a0a' stroke-width='3' stroke-linecap='square'/%3E%3Cline x1='100' y1='20' x2='84' y2='20' stroke='%230a0a0a' stroke-width='3' stroke-linecap='square'/%3E%3Cline x1='100' y1='100' x2='84' y2='100' stroke='%230a0a0a' stroke-width='3' stroke-linecap='square'/%3E%3Cpolygon points='72,28 50,62 64,62 46,92 74,56 59,56' fill='%230a0a0a'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Barlow+Condensed:wght@400;600;700;900&display=swap" rel="stylesheet">
 <style>
@@ -1433,16 +1433,71 @@ function calcUpdate() {
 
 calcUpdate();
 
-// ---- CONTACT FORM ----
-function submitForm() {
-  const email = document.getElementById('email').value;
-  const fname = document.getElementById('fname').value;
-  if (!fname || !email || !email.includes('@')) {
-    const first = !fname ? 'fname' : 'email';
-    document.getElementById(first).style.borderColor = 'rgba(245,244,240,0.5)';
-    document.getElementById(first).focus();
+// ---- CONTACT FORM (Formspree) ----
+// TO ACTIVATE: Replace YOUR_FORM_ID below with your Formspree form ID
+// 1. Sign up free at formspree.io
+// 2. Create a new form — you'll get an ID like "xyzabc12"
+// 3. Replace YOUR_FORM_ID with that ID and you're done
+const FORMSPREE_ID = 'YOUR_FORM_ID';
+
+async function submitForm() {
+  const fname   = document.getElementById('fname').value.trim();
+  const email   = document.getElementById('email').value.trim();
+  const phone   = document.getElementById('phone').value.trim();
+  const bizType = document.getElementById('bizType').value;
+  const interest= document.getElementById('interest').value;
+  const billSize= document.getElementById('billSize').value;
+  const message = document.getElementById('message').value.trim();
+  const btn     = document.querySelector('.form-submit');
+
+  // Basic validation
+  if (!fname) { highlight('fname'); return; }
+  if (!email || !email.includes('@')) { highlight('email'); return; }
+
+  // Swap button state
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+
+  if (FORMSPREE_ID === 'YOUR_FORM_ID') {
+    // No ID set yet — simulate success so layout can be previewed
+    showSuccess();
     return;
   }
+
+  try {
+    const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name:          fname + ' ' + document.getElementById('lname').value.trim(),
+        email,
+        phone,
+        business_type: bizType,
+        interest,
+        monthly_bill:  billSize,
+        message
+      })
+    });
+
+    if (res.ok) {
+      showSuccess();
+    } else {
+      btn.textContent = 'Failed — please try again';
+      btn.disabled = false;
+    }
+  } catch (err) {
+    btn.textContent = 'Failed — please try again';
+    btn.disabled = false;
+  }
+}
+
+function highlight(id) {
+  const el = document.getElementById(id);
+  el.style.borderColor = 'rgba(245,244,240,0.5)';
+  el.focus();
+}
+
+function showSuccess() {
   document.getElementById('contactForm').style.display = 'none';
   document.getElementById('formSuccess').style.display = 'block';
 }
