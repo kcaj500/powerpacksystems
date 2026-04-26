@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Power Pack Systems — Solar & Battery Energy Storage</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cline x1='20' y1='20' x2='20' y2='100' stroke='%230a0a0a' stroke-width='3' stroke-linecap='square'/%3E%3Cline x1='20' y1='20' x2='36' y2='20' stroke='%230a0a0a' stroke-width='3' stroke-linecap='square'/%3E%3Cline x1='20' y1='100' x2='36' y2='100' stroke='%230a0a0a' stroke-width='3' stroke-linecap='square'/%3E%3Cline x1='100' y1='20' x2='100' y2='100' stroke='%230a0a0a' stroke-width='3' stroke-linecap='square'/%3E%3Cline x1='100' y1='20' x2='84' y2='20' stroke='%230a0a0a' stroke-width='3' stroke-linecap='square'/%3E%3Cline x1='100' y1='100' x2='84' y2='100' stroke='%230a0a0a' stroke-width='3' stroke-linecap='square'/%3E%3Cpolygon points='72,28 50,62 64,62 46,92 74,56 59,56' fill='%230a0a0a'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Barlow+Condensed:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+
+/* ============================================================
+   RESET & ROOT
+   ============================================================ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --black:   #0a0a0a;
+  --off-black:#111111;
+  --dark:    #1a1a1a;
+  --mid:     #2e2e2e;
+  --white:   #f5f4f0;
+  --grey:    #888888;
+  --light:   #cccccc;
+  --border:  rgba(245,244,240,0.1);
+  --nav-h:   72px;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'Barlow', sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Grain */
+body::after {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 9999;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  opacity: 0.5;
+}
+
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; border: none; background: none; font: inherit; }
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  height: var(--nav-h);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 clamp(24px, 4vw, 60px);
+  border-bottom: 1px solid var(--border);
+  background: rgba(10,10,10,0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: border-color 0.3s;
+}
+
+.nav-logo {
+  display: flex; align-items: center; gap: 12px; cursor: pointer;
+}
+
+.nav-logo svg { width: 200px; height: auto; }
+
+.nav-links {
+  display: flex; align-items: center; gap: 36px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--grey); transition: color 0.2s; position: relative;
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
+  height: 1px; background: var(--white);
+  transform: scaleX(0); transform-origin: left; transition: transform 0.25s;
+}
+.nav-links a:hover, .nav-links a.active { color: var(--white); }
+.nav-links a:hover::after, .nav-links a.active::after { transform: scaleX(1); }
+
+.nav-cta {
+  background: var(--white); color: var(--black);
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+  font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+  padding: 10px 22px; transition: background 0.2s, color 0.2s;
+}
+.nav-cta:hover { background: transparent; color: var(--white); border: 1px solid var(--white); }
+
+.hamburger {
+  display: none; flex-direction: column; gap: 5px;
+  padding: 4px; cursor: pointer;
+}
+.hamburger span { display: block; width: 24px; height: 1.5px; background: var(--white); transition: transform 0.3s, opacity 0.3s; }
+.hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+.mobile-menu {
+  display: none; position: fixed; inset: var(--nav-h) 0 0 0;
+  background: var(--black); z-index: 999; padding: 40px 24px;
+  flex-direction: column; gap: 28px;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  font-family: 'Bebas Neue', sans-serif; font-size: 36px; letter-spacing: 0.05em;
+  color: var(--grey); transition: color 0.2s;
+}
+.mobile-menu a:hover, .mobile-menu a.active { color: var(--white); }
+.mobile-menu .mob-cta {
+  margin-top: 16px; display: inline-block;
+  background: var(--white); color: var(--black);
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+  font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase;
+  padding: 14px 28px; width: fit-content;
+}
+
+/* ============================================================
+   PAGES (single-page routing)
+   ============================================================ */
+.page { display: none; padding-top: var(--nav-h); min-height: 100vh; }
+.page.active { display: block; }
+
+/* ============================================================
+   SHARED COMPONENTS
+   ============================================================ */
+.container { max-width: 1140px; margin: 0 auto; padding: 0 clamp(24px,4vw,60px); }
+
+.section { padding: clamp(60px, 8vh, 120px) 0; }
+
+.eyebrow {
+  font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--grey); margin-bottom: 16px; display: block;
+}
+
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(42px, 6vw, 80px);
+  line-height: 0.92; letter-spacing: 0.01em; color: var(--white);
+  margin-bottom: 24px;
+}
+
+.section-title .outline {
+  color: transparent; -webkit-text-stroke: 1.5px var(--white);
+}
+
+.body-text {
+  font-size: clamp(15px, 1.4vw, 17px); color: rgba(245,244,240,0.6);
+  line-height: 1.7; max-width: 560px;
+}
+
+.rule { width: 60px; height: 2px; background: var(--white); margin-bottom: 32px; }
+
+.btn-primary {
+  display: inline-block;
+  background: var(--white); color: var(--black);
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+  font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase;
+  padding: 15px 32px; transition: background 0.2s, color 0.2s, border 0.2s;
+  border: 1px solid var(--white);
+}
+.btn-primary:hover { background: transparent; color: var(--white); }
+
+.btn-outline {
+  display: inline-block;
+  background: transparent; color: var(--white);
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+  font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase;
+  padding: 15px 32px; border: 1px solid rgba(245,244,240,0.3);
+  transition: border-color 0.2s, color 0.2s;
+}
+.btn-outline:hover { border-color: var(--white); color: var(--white); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 40px clamp(24px,4vw,60px);
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 16px;
+}
+.footer-logo { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: 0.2em; color: var(--grey); }
+.footer-links { display: flex; gap: 28px; }
+.footer-links a { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--grey); transition: color 0.2s; }
+.footer-links a:hover { color: var(--white); }
+.footer-copy { font-size: 11px; color: rgba(245,244,240,0.25); letter-spacing: 0.08em; }
+
+/* ============================================================
+   PAGE: HOME
+   ============================================================ */
+
+/* Hero */
+.hero {
+  position: relative; min-height: calc(100vh - var(--nav-h));
+  display: flex; flex-direction: column; justify-content: center;
+  padding: clamp(60px,8vh,100px) clamp(24px,4vw,60px);
+  overflow: hidden;
+}
+
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(245,244,240,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245,244,240,0.03) 1px, transparent 1px);
+  background-size: 80px 80px;
+  animation: gridDrift 50s linear infinite;
+}
+@keyframes gridDrift { to { background-position: 80px 80px; } }
+
+.hero-bg-text {
+  position: absolute; bottom: -0.1em; left: -0.02em;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(120px, 18vw, 280px);
+  color: transparent; -webkit-text-stroke: 1px rgba(245,244,240,0.05);
+  line-height: 1; white-space: nowrap; pointer-events: none; z-index: 0;
+  animation: fadeUp 1.2s ease both; animation-delay: 0.2s;
+}
+
+.hero-bolt {
+  position: absolute; right: clamp(60px,10vw,180px); top: 50%;
+  transform: translateY(-50%);
+  opacity: 0; animation: boltIn 1s ease both; animation-delay: 0.6s;
+  z-index: 1; pointer-events: none;
+}
+.hero-bolt svg { width: clamp(80px,9vw,160px); opacity: 0.08; }
+@keyframes boltIn { from { opacity: 0; transform: translateY(-50%) scale(0.7); } to { opacity: 1; transform: translateY(-50%) scale(1); } }
+
+.hero-content { position: relative; z-index: 2; max-width: 1140px; margin: 0 auto; width: 100%; }
+
+.hero-eyebrow {
+  font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--grey); margin-bottom: 20px;
+  opacity: 0; animation: fadeUp 0.7s ease both; animation-delay: 0.3s;
+}
+
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(72px, 11vw, 180px);
+  line-height: 0.88; letter-spacing: -0.01em;
+  opacity: 0; animation: fadeUp 0.8s ease both; animation-delay: 0.45s;
+}
+.hero-title .outline { color: transparent; -webkit-text-stroke: 2px var(--white); }
+
+.hero-rule {
+  width: 0; height: 1px; background: linear-gradient(90deg, var(--white), transparent);
+  margin: 28px 0;
+  animation: lineGrow 1s cubic-bezier(0.4,0,0.2,1) both; animation-delay: 0.8s;
+}
+@keyframes lineGrow { from { width: 0; opacity: 0; } to { width: clamp(80px,14vw,200px); opacity: 1; } }
+
+.hero-sub {
+  font-size: clamp(15px,1.4vw,18px); color: rgba(245,244,240,0.55);
+  max-width: 460px; line-height: 1.65; margin-bottom: 36px;
+  opacity: 0; animation: fadeUp 0.7s ease both; animation-delay: 0.9s;
+}
+
+.hero-btns {
+  display: flex; gap: 16px; flex-wrap: wrap;
+  opacity: 0; animation: fadeUp 0.7s ease both; animation-delay: 1.05s;
+}
+
+.hero-stats {
+  display: grid; grid-template-columns: repeat(3, auto); gap: 0;
+  margin-top: clamp(60px,8vh,100px); border-top: 1px solid var(--border);
+  padding-top: clamp(32px,4vh,48px);
+  opacity: 0; animation: fadeUp 0.7s ease both; animation-delay: 1.2s;
+}
+
+.stat { padding-right: 48px; }
+.stat + .stat { border-left: 1px solid var(--border); padding-left: 48px; padding-right: 48px; }
+.stat-num {
+  font-family: 'Bebas Neue', sans-serif; font-size: clamp(42px,5vw,68px);
+  line-height: 1; letter-spacing: 0.02em; color: var(--white);
+}
+.stat-label { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--grey); margin-top: 4px; }
+
+/* Marquee strip */
+.marquee-wrap {
+  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  overflow: hidden; background: var(--off-black); padding: 14px 0;
+}
+.marquee-track {
+  display: flex; gap: 60px; width: max-content;
+  animation: marquee 28s linear infinite;
+}
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.marquee-item {
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 600;
+  font-size: 12px; letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--grey); white-space: nowrap; display: flex; align-items: center; gap: 60px;
+}
+.marquee-item::after { content: '·'; color: rgba(245,244,240,0.2); }
+
+/* Why section */
+.why-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px,5vw,80px);
+  align-items: start;
+}
+.why-cards { display: flex; flex-direction: column; gap: 2px; }
+.why-card {
+  border: 1px solid var(--border); padding: 28px 32px;
+  display: flex; gap: 24px; align-items: flex-start;
+  transition: border-color 0.25s, background 0.25s;
+}
+.why-card:hover { border-color: rgba(245,244,240,0.3); background: rgba(245,244,240,0.03); }
+.why-num {
+  font-family: 'Bebas Neue', sans-serif; font-size: 36px; color: rgba(245,244,240,0.15);
+  line-height: 1; flex-shrink: 0; min-width: 36px;
+}
+.why-card-title { font-weight: 600; font-size: 15px; margin-bottom: 6px; letter-spacing: 0.03em; }
+.why-card-body { font-size: 14px; color: var(--grey); line-height: 1.6; }
+
+/* Services preview */
+.services-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 48px;
+}
+.service-card {
+  background: var(--off-black); border: 1px solid var(--border);
+  padding: 36px 28px; transition: border-color 0.25s; cursor: pointer; position: relative; overflow: hidden;
+}
+.service-card::before {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+  background: var(--white); transform: scaleX(0); transform-origin: left;
+  transition: transform 0.3s;
+}
+.service-card:hover { border-color: rgba(245,244,240,0.3); }
+.service-card:hover::before { transform: scaleX(1); }
+.service-icon { font-family: 'Bebas Neue', sans-serif; font-size: 48px; line-height: 1; color: rgba(245,244,240,0.12); margin-bottom: 16px; }
+.service-card-title { font-weight: 600; font-size: 16px; margin-bottom: 10px; }
+.service-card-body { font-size: 13px; color: var(--grey); line-height: 1.6; }
+.service-arrow { margin-top: 20px; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey); transition: color 0.2s; }
+.service-card:hover .service-arrow { color: var(--white); }
+
+/* ============================================================
+   PAGE: SERVICES
+   ============================================================ */
+.services-hero {
+  padding: clamp(80px,10vh,140px) 0 clamp(40px,5vh,80px);
+  border-bottom: 1px solid var(--border);
+  position: relative; overflow: hidden;
+}
+.services-hero-bg {
+  position: absolute; right: -40px; top: 50%; transform: translateY(-50%);
+  font-family: 'Bebas Neue', sans-serif; font-size: clamp(100px,16vw,240px);
+  color: transparent; -webkit-text-stroke: 1px rgba(245,244,240,0.04);
+  pointer-events: none; white-space: nowrap;
+}
+
+.service-full {
+  padding: clamp(60px,8vh,100px) 0;
+  border-bottom: 1px solid var(--border);
+}
+.service-full-inner {
+  display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px,6vw,100px);
+  align-items: start;
+}
+.service-full-inner.reverse { direction: rtl; }
+.service-full-inner.reverse > * { direction: ltr; }
+
+.service-tag {
+  display: inline-block; border: 1px solid var(--border); padding: 4px 14px;
+  font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--grey); margin-bottom: 20px;
+}
+.service-full-title {
+  font-family: 'Bebas Neue', sans-serif; font-size: clamp(36px,5vw,68px);
+  line-height: 0.92; margin-bottom: 20px;
+}
+.service-includes { margin-top: 32px; }
+.service-includes-label { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--grey); margin-bottom: 12px; }
+.include-item {
+  display: flex; align-items: flex-start; gap: 12px; padding: 10px 0;
+  border-bottom: 1px solid var(--border); font-size: 14px; color: rgba(245,244,240,0.7);
+}
+.include-item::before { content: '—'; color: var(--grey); flex-shrink: 0; margin-top: 1px; }
+
+.service-visual {
+  background: var(--off-black); border: 1px solid var(--border);
+  aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+}
+.service-visual-num {
+  font-family: 'Bebas Neue', sans-serif; font-size: clamp(100px,14vw,200px);
+  color: rgba(245,244,240,0.05); line-height: 1; pointer-events: none;
+}
+.service-visual-icon {
+  position: absolute; bottom: 24px; right: 24px;
+  font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey);
+}
+
+/* Systems table */
+.systems-section { background: var(--off-black); padding: clamp(60px,8vh,100px) 0; }
+.systems-table { width: 100%; border-collapse: collapse; margin-top: 40px; }
+.systems-table th {
+  text-align: left; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--grey); padding: 12px 20px; border-bottom: 1px solid var(--border);
+}
+.systems-table td {
+  padding: 18px 20px; border-bottom: 1px solid var(--border);
+  font-size: 14px; color: rgba(245,244,240,0.75); vertical-align: top;
+}
+.systems-table tr:hover td { background: rgba(245,244,240,0.02); }
+.systems-table .tier { font-weight: 600; color: var(--white); font-size: 15px; }
+
+/* ============================================================
+   PAGE: ABOUT
+   ============================================================ */
+.about-hero {
+  padding: clamp(80px,10vh,140px) 0 clamp(40px,5vh,80px);
+  border-bottom: 1px solid var(--border);
+}
+.about-hero-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: end; }
+
+.values-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-top: 48px; }
+.value-card {
+  border: 1px solid var(--border); padding: 32px;
+  transition: border-color 0.25s;
+}
+.value-card:hover { border-color: rgba(245,244,240,0.3); }
+.value-num { font-family: 'Bebas Neue', sans-serif; font-size: 48px; color: rgba(245,244,240,0.1); line-height: 1; margin-bottom: 12px; }
+.value-title { font-weight: 600; font-size: 15px; margin-bottom: 8px; }
+.value-body { font-size: 14px; color: var(--grey); line-height: 1.6; }
+
+.creds-section { background: var(--off-black); padding: clamp(60px,8vh,100px) 0; border-top: 1px solid var(--border); }
+.creds-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 2px; margin-top: 40px; }
+.cred-card { border: 1px solid var(--border); padding: 28px 24px; text-align: center; }
+.cred-title { font-weight: 600; font-size: 13px; margin-bottom: 6px; letter-spacing: 0.05em; }
+.cred-body { font-size: 12px; color: var(--grey); line-height: 1.5; }
+
+.process-section { padding: clamp(60px,8vh,100px) 0; border-top: 1px solid var(--border); }
+.process-steps { display: grid; grid-template-columns: repeat(5,1fr); gap: 0; margin-top: 48px; position: relative; }
+.process-steps::before {
+  content: ''; position: absolute; top: 24px; left: 10%; right: 10%; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border) 20%, var(--border) 80%, transparent);
+}
+.step { padding: 0 16px; text-align: center; position: relative; }
+.step-dot {
+  width: 12px; height: 12px; background: var(--white); border-radius: 50%;
+  margin: 18px auto 20px; position: relative; z-index: 1;
+}
+.step-num { font-family: 'Bebas Neue', sans-serif; font-size: 14px; color: var(--grey); margin-bottom: 8px; }
+.step-title { font-weight: 600; font-size: 13px; margin-bottom: 6px; }
+.step-body { font-size: 12px; color: var(--grey); line-height: 1.5; }
+
+/* ============================================================
+   PAGE: CALCULATOR
+   ============================================================ */
+.calc-page-hero {
+  padding: clamp(60px,8vh,100px) 0 clamp(40px,5vh,60px);
+  border-bottom: 1px solid var(--border);
+}
+
+.calc-layout {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
+  padding: clamp(40px,6vh,80px) 0;
+  align-items: start;
+}
+
+.calc-panel {
+  background: var(--off-black); border: 1px solid var(--border); padding: 36px;
+  position: sticky; top: calc(var(--nav-h) + 24px);
+}
+.calc-panel-title {
+  font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.06em;
+  color: var(--grey); margin-bottom: 28px; text-transform: uppercase;
+}
+
+.field { margin-bottom: 28px; }
+.field label {
+  display: block; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--grey); margin-bottom: 8px;
+}
+.field-hint { font-size: 11px; color: rgba(245,244,240,0.3); margin-top: 5px; }
+
+input[type="range"] {
+  -webkit-appearance: none; width: 100%; height: 2px;
+  background: rgba(245,244,240,0.15); border-radius: 1px; outline: none; margin: 8px 0 4px;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 16px; height: 16px; background: var(--white);
+  border-radius: 50%; cursor: pointer; box-shadow: 0 0 10px rgba(245,244,240,0.3);
+  transition: box-shadow 0.2s;
+}
+input[type="range"]::-webkit-slider-thumb:hover { box-shadow: 0 0 18px rgba(245,244,240,0.6); }
+
+.range-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.range-edge { font-size: 11px; color: rgba(245,244,240,0.3); }
+.range-val { font-family: 'Bebas Neue', sans-serif; font-size: 26px; color: var(--white); letter-spacing: 0.04em; }
+
+select {
+  width: 100%; background: rgba(245,244,240,0.05); border: 1px solid rgba(245,244,240,0.15);
+  color: var(--white); font-family: 'Barlow', sans-serif; font-size: 14px;
+  padding: 10px 14px; outline: none; cursor: pointer; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath fill='%23888' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center;
+  transition: border-color 0.2s;
+}
+select:focus { border-color: rgba(245,244,240,0.4); }
+select option { background: #1a1a1a; }
+
+.results-col { display: flex; flex-direction: column; gap: 16px; }
+
+.result-card {
+  background: var(--off-black); border: 1px solid var(--border); padding: 28px 32px;
+  transition: border-color 0.3s; position: relative; overflow: hidden;
+}
+.result-card.highlight { background: linear-gradient(135deg, #111, #141a14); border-color: rgba(245,244,240,0.2); }
+.result-card::after {
+  content: ''; position: absolute; top: 0; right: 0;
+  width: 60px; height: 60px;
+  background: radial-gradient(circle, rgba(245,244,240,0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+.result-label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey); margin-bottom: 8px; }
+.result-big { font-family: 'Bebas Neue', sans-serif; font-size: 54px; line-height: 1; letter-spacing: 0.02em; color: var(--white); }
+.result-sub { font-size: 13px; color: var(--grey); margin-top: 6px; line-height: 1.5; }
+.result-bar { background: rgba(245,244,240,0.08); border-radius: 1px; height: 4px; margin-top: 14px; overflow: hidden; }
+.result-bar-fill { height: 100%; background: var(--white); transition: width 0.6s cubic-bezier(0.4,0,0.2,1); }
+
+.calc-cta-box {
+  border: 1px solid var(--border); padding: 32px; margin-top: 16px;
+  background: var(--off-black);
+}
+.calc-cta-box h3 { font-family: 'Bebas Neue', sans-serif; font-size: 26px; margin-bottom: 10px; }
+.calc-cta-box p { font-size: 13px; color: var(--grey); line-height: 1.6; margin-bottom: 20px; }
+
+/* ============================================================
+   PAGE: CONTACT
+   ============================================================ */
+.contact-hero {
+  padding: clamp(80px,10vh,140px) 0 clamp(40px,5vh,80px);
+  border-bottom: 1px solid var(--border);
+}
+.contact-layout {
+  display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px,6vw,100px);
+  padding: clamp(60px,8vh,100px) 0;
+  align-items: start;
+}
+.contact-info { position: sticky; top: calc(var(--nav-h) + 32px); }
+.contact-info-item { padding: 24px 0; border-bottom: 1px solid var(--border); }
+.contact-info-item:first-child { border-top: 1px solid var(--border); }
+.contact-info-label { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--grey); margin-bottom: 6px; }
+.contact-info-val { font-size: 16px; font-weight: 400; color: var(--white); }
+.contact-info-val a { transition: color 0.2s; }
+.contact-info-val a:hover { color: var(--grey); }
+
+.form-group { margin-bottom: 24px; }
+.form-group label {
+  display: block; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--grey); margin-bottom: 8px;
+}
+.form-group input, .form-group textarea, .form-group select {
+  width: 100%; background: rgba(245,244,240,0.04); border: 1px solid rgba(245,244,240,0.12);
+  color: var(--white); font-family: 'Barlow', sans-serif; font-size: 15px;
+  padding: 13px 16px; outline: none; transition: border-color 0.2s, background 0.2s;
+  resize: none;
+}
+.form-group input::placeholder,
+.form-group textarea::placeholder { color: rgba(245,244,240,0.2); }
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+  border-color: rgba(245,244,240,0.4); background: rgba(245,244,240,0.06);
+}
+.form-group textarea { height: 140px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-submit { width: 100%; background: var(--white); color: var(--black);
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+  font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase;
+  padding: 16px; border: 1px solid var(--white);
+  transition: background 0.2s, color 0.2s; cursor: pointer; margin-top: 8px;
+}
+.form-submit:hover { background: transparent; color: var(--white); }
+
+.form-success {
+  display: none; padding: 28px 32px; border: 1px solid rgba(245,244,240,0.2);
+  background: rgba(245,244,240,0.04); text-align: center;
+}
+.form-success h3 { font-family: 'Bebas Neue', sans-serif; font-size: 32px; margin-bottom: 10px; }
+.form-success p { font-size: 14px; color: var(--grey); }
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.fade-in.visible { opacity: 1; transform: translateY(0); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 900px) {
+  .why-grid, .service-full-inner, .about-hero-inner,
+  .calc-layout, .contact-layout { grid-template-columns: 1fr; }
+  .service-full-inner.reverse { direction: ltr; }
+  .services-grid { grid-template-columns: 1fr 1fr; }
+  .creds-grid { grid-template-columns: 1fr 1fr; }
+  .process-steps { grid-template-columns: 1fr 1fr; gap: 24px; }
+  .process-steps::before { display: none; }
+
+  .hero-stats { grid-template-columns: 1fr 1fr; }
+  .stat + .stat { border-left: none; padding-left: 0; }
+  .calc-panel { position: static; }
+  .contact-info { position: static; }
+}
+@media (max-width: 640px) {
+  .nav-links, .nav-cta { display: none; }
+  .hamburger { display: flex; }
+  .services-grid, .values-grid, .creds-grid { grid-template-columns: 1fr; }
+  .process-steps { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+  .hero-stats { grid-template-columns: 1fr; }
+  .stat + .stat { border-left: none; border-top: 1px solid var(--border); padding: 24px 0 0 0; margin-top: 24px; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     NAVIGATION
+     ============================================================ -->
+<nav>
+  <div class="nav-logo" onclick="navigate('home')">
+    <svg width="210" height="36" viewBox="0 0 420 72" xmlns="http://www.w3.org/2000/svg">
+      <line x1="4" y1="10" x2="4" y2="62" stroke="#f5f4f0" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="4" y1="10" x2="16" y2="10" stroke="#f5f4f0" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="4" y1="62" x2="16" y2="62" stroke="#f5f4f0" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="68" y1="10" x2="68" y2="62" stroke="#f5f4f0" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="68" y1="10" x2="56" y2="10" stroke="#f5f4f0" stroke-width="2.5" stroke-linecap="square"/>
+      <line x1="68" y1="62" x2="56" y2="62" stroke="#f5f4f0" stroke-width="2.5" stroke-linecap="square"/>
+      <polygon points="44,14 28,38 39,38 25,58 47,35 35,35" fill="#f5f4f0"/>
+      <line x1="82" y1="12" x2="82" y2="60" stroke="#333" stroke-width="1"/>
+      <text x="94" y="47" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="38" fill="#f5f4f0" letter-spacing="-0.5">POWER PACK</text>
+      <text x="96" y="63" font-family="Arial, Helvetica, sans-serif" font-weight="400" font-size="14" fill="#888" letter-spacing="7.5">SYSTEMS</text>
+    </svg>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#" onclick="navigate('home')" data-page="home">Home</a></li>
+    <li><a href="#" onclick="navigate('services')" data-page="services">Services</a></li>
+    <li><a href="#" onclick="navigate('about')" data-page="about">About</a></li>
+    <li><a href="#" onclick="navigate('calculator')" data-page="calculator">Calculator</a></li>
+    <li><a href="#" onclick="navigate('contact')" data-page="contact">Contact</a></li>
+  </ul>
+  <button class="nav-cta" onclick="navigate('contact')">Get a Quote</button>
+  <button class="hamburger" id="hamburger" onclick="toggleMobile()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#" onclick="navigate('home');toggleMobile()" data-page="home">Home</a>
+  <a href="#" onclick="navigate('services');toggleMobile()" data-page="services">Services</a>
+  <a href="#" onclick="navigate('about');toggleMobile()" data-page="about">About</a>
+  <a href="#" onclick="navigate('calculator');toggleMobile()" data-page="calculator">Calculator</a>
+  <a href="#" onclick="navigate('contact');toggleMobile()" data-page="contact">Contact</a>
+  <a href="#" class="mob-cta" onclick="navigate('contact');toggleMobile()">Get a Quote</a>
+</div>
+
+<!-- ============================================================
+     PAGE: HOME
+     ============================================================ -->
+<div class="page active" id="page-home">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-bg-text">POWER PACK</div>
+    <div class="hero-bolt">
+      <svg viewBox="0 0 100 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="60,0 20,90 55,90 40,160 80,60 47,60" fill="#f5f4f0"/>
+      </svg>
+    </div>
+    <div class="hero-content container">
+      <p class="hero-eyebrow">Solar PV & Battery Energy Storage · Commercial & Farm</p>
+      <h1 class="hero-title">Cut Your<br>Energy<br><span class="outline">Bills.</span></h1>
+      <div class="hero-rule"></div>
+      <p class="hero-sub">We design and install solar PV and battery energy storage systems for commercial properties and farms across the UK. Real savings. Proven returns.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="navigate('calculator')">Calculate Your Savings</button>
+        <button class="btn-outline" onclick="navigate('contact')">Get a Free Quote</button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <div class="stat-num">40–60%</div>
+          <div class="stat-label">Average bill reduction</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">3–6 YR</div>
+          <div class="stat-label">Typical payback period</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">20+ YR</div>
+          <div class="stat-label">System lifespan</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Marquee -->
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span class="marquee-item">Solar PV Installation</span>
+      <span class="marquee-item">Battery Energy Storage</span>
+      <span class="marquee-item">Commercial & Industrial</span>
+      <span class="marquee-item">Agricultural</span>
+      <span class="marquee-item">MCS Certified</span>
+      <span class="marquee-item">DNO Approved</span>
+      <span class="marquee-item">Victron Energy Systems</span>
+      <span class="marquee-item">UK Wide</span>
+      <!-- Duplicate for seamless loop -->
+      <span class="marquee-item">Solar PV Installation</span>
+      <span class="marquee-item">Battery Energy Storage</span>
+      <span class="marquee-item">Commercial & Industrial</span>
+      <span class="marquee-item">Agricultural</span>
+      <span class="marquee-item">MCS Certified</span>
+      <span class="marquee-item">DNO Approved</span>
+      <span class="marquee-item">Victron Energy Systems</span>
+      <span class="marquee-item">UK Wide</span>
+    </div>
+  </div>
+
+  <!-- Why section -->
+  <section class="section">
+    <div class="container">
+      <div class="why-grid">
+        <div>
+          <span class="eyebrow">Why Power Pack Systems</span>
+          <h2 class="section-title">Built on<br><span class="outline">expertise.</span></h2>
+          <p class="body-text">We're a lean, qualified team — not a call centre with subcontractors. Every system is designed by a qualified electrician with real solar and commercial installation experience. We lead every conversation with your ROI, not our product list.</p>
+          <br><br>
+          <button class="btn-outline" onclick="navigate('about')">About Us →</button>
+        </div>
+        <div class="why-cards">
+          <div class="why-card fade-in">
+            <div class="why-num">01</div>
+            <div>
+              <div class="why-card-title">Qualified electricians</div>
+              <div class="why-card-body">18th Edition, MCS certified. Every install done to BS 7671 with full DNO compliance and documentation.</div>
+            </div>
+          </div>
+          <div class="why-card fade-in">
+            <div class="why-num">02</div>
+            <div>
+              <div class="why-card-title">ROI-first approach</div>
+              <div class="why-card-body">We start with your meter data and energy profile. You get a projected payback period and savings figure before we discuss any equipment.</div>
+            </div>
+          </div>
+          <div class="why-card fade-in">
+            <div class="why-num">03</div>
+            <div>
+              <div class="why-card-title">Market-leading components</div>
+              <div class="why-card-body">Victron Energy inverters and monitoring, Tier 1 LiFePO4 battery cells. Systems built to last 20+ years, not just through the warranty period.</div>
+            </div>
+          </div>
+          <div class="why-card fade-in">
+            <div class="why-num">04</div>
+            <div>
+              <div class="why-card-title">End-to-end service</div>
+              <div class="why-card-body">Survey to commissioning. We handle DNO applications, MCS certification, and hand you a system that works — with ongoing monitoring built in.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services preview -->
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <span class="eyebrow">What we do</span>
+      <h2 class="section-title">Our <span class="outline">Services</span></h2>
+      <div class="services-grid">
+        <div class="service-card fade-in" onclick="navigate('services')">
+          <div class="service-icon">☀</div>
+          <div class="service-card-title">Solar PV Installation</div>
+          <div class="service-card-body">Commercial and agricultural rooftop and ground-mount solar PV systems. Full design, supply, installation and grid connection.</div>
+          <div class="service-arrow">View service →</div>
+        </div>
+        <div class="service-card fade-in" onclick="navigate('services')">
+          <div class="service-icon">⚡</div>
+          <div class="service-card-title">Battery Energy Storage</div>
+          <div class="service-card-body">Containerised BESS units from 64kWh to 288kWh+. Store cheap-rate or solar-generated power and use it at peak times.</div>
+          <div class="service-arrow">View service →</div>
+        </div>
+        <div class="service-card fade-in" onclick="navigate('services')">
+          <div class="service-icon">◈</div>
+          <div class="service-card-title">Combined Solar & Storage</div>
+          <div class="service-card-body">Maximum savings when solar and battery are installed together. One project, one team, one point of contact.</div>
+          <div class="service-arrow">View service →</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA strip -->
+  <section class="section" style="background: var(--off-black); border-top: 1px solid var(--border);">
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:32px;">
+      <div>
+        <h2 class="section-title" style="margin-bottom:10px;">Ready to see<br>your <span class="outline">numbers?</span></h2>
+        <p class="body-text">Use our free calculator or book a site visit — no obligation.</p>
+      </div>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;">
+        <button class="btn-primary" onclick="navigate('calculator')">Open Calculator</button>
+        <button class="btn-outline" onclick="navigate('contact')">Book a Site Visit</button>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-logo">POWER PACK SYSTEMS LTD</div>
+    <div class="footer-links">
+      <a href="#" onclick="navigate('services')">Services</a>
+      <a href="#" onclick="navigate('about')">About</a>
+      <a href="#" onclick="navigate('calculator')">Calculator</a>
+      <a href="#" onclick="navigate('contact')">Contact</a>
+    </div>
+    <div class="footer-copy">© 2026 Power Pack Systems Ltd · UK</div>
+  </footer>
+</div>
+
+<!-- ============================================================
+     PAGE: SERVICES
+     ============================================================ -->
+<div class="page" id="page-services">
+
+  <section class="services-hero">
+    <div class="container" style="position:relative;z-index:2;">
+      <span class="eyebrow">What we install</span>
+      <h1 class="section-title" style="font-size:clamp(60px,9vw,130px);">Our<br><span class="outline">Services.</span></h1>
+    </div>
+    <div class="services-hero-bg">SERVICES</div>
+  </section>
+
+  <!-- Solar PV -->
+  <section class="service-full">
+    <div class="container service-full-inner">
+      <div>
+        <span class="service-tag">Service 01</span>
+        <h2 class="service-full-title">Solar PV<br>Installation</h2>
+        <p class="body-text">Commercial and agricultural solar PV systems designed around your energy profile. We handle everything from feasibility and design through to DNO connection and commissioning — with MCS certification included.</p>
+        <div class="service-includes">
+          <div class="service-includes-label">What's included</div>
+          <div class="include-item">Site survey and shading analysis</div>
+          <div class="include-item">Full system design and yield estimate</div>
+          <div class="include-item">Supply and installation of panels, inverters and mounting</div>
+          <div class="include-item">G98/G99 DNO notification and connection</div>
+          <div class="include-item">MCS certificate for SEG export payments</div>
+          <div class="include-item">Monitoring system setup</div>
+        </div>
+        <br>
+        <button class="btn-outline" onclick="navigate('contact')">Get a Solar Quote →</button>
+      </div>
+      <div class="service-visual">
+        <div class="service-visual-num">01</div>
+        <div class="service-visual-icon">Solar PV</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Battery Storage -->
+  <section class="service-full">
+    <div class="container service-full-inner reverse">
+      <div>
+        <span class="service-tag">Service 02</span>
+        <h2 class="service-full-title">Battery Energy<br>Storage</h2>
+        <p class="body-text">Containerised BESS units using Tier 1 LiFePO4 battery cells and Victron Energy inverters. Store cheap overnight-rate power or excess solar generation and deploy it during peak periods — cutting your bills by 40–60%.</p>
+        <div class="service-includes">
+          <div class="service-includes-label">What's included</div>
+          <div class="include-item">Energy consumption and tariff analysis</div>
+          <div class="include-item">Custom system design (64kWh – 288kWh+)</div>
+          <div class="include-item">LiFePO4 battery modules with 10-year warranty</div>
+          <div class="include-item">Victron MultiPlus-II inverter stack (single or 3-phase)</div>
+          <div class="include-item">Victron Cerbo GX remote monitoring</div>
+          <div class="include-item">Weatherproof steel enclosure</div>
+          <div class="include-item">Full commissioning and handover documentation</div>
+        </div>
+        <br>
+        <button class="btn-outline" onclick="navigate('contact')">Get a Storage Quote →</button>
+      </div>
+      <div class="service-visual">
+        <div class="service-visual-num">02</div>
+        <div class="service-visual-icon">Battery Storage</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Combined -->
+  <section class="service-full">
+    <div class="container service-full-inner">
+      <div>
+        <span class="service-tag">Service 03</span>
+        <h2 class="service-full-title">Combined Solar<br>& Storage</h2>
+        <p class="body-text">The maximum savings scenario. Installing solar PV and battery storage together means you generate, store and self-consume your own power — with a single project, single team and single point of contact. Payback periods from as little as 3 years.</p>
+        <div class="service-includes">
+          <div class="service-includes-label">What's included</div>
+          <div class="include-item">Everything in Solar PV + Battery Storage services</div>
+          <div class="include-item">Integrated system design for maximum self-consumption</div>
+          <div class="include-item">Single installation project — reduced disruption</div>
+          <div class="include-item">Combined MCS certification</div>
+          <div class="include-item">Unified Victron monitoring dashboard</div>
+        </div>
+        <br>
+        <button class="btn-primary" onclick="navigate('calculator')">Calculate Your Savings →</button>
+      </div>
+      <div class="service-visual">
+        <div class="service-visual-num">03</div>
+        <div class="service-visual-icon">Solar + Storage</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Systems table -->
+  <section class="systems-section">
+    <div class="container">
+      <span class="eyebrow">Battery system sizing</span>
+      <h2 class="section-title">Find Your<br><span class="outline">System.</span></h2>
+      <table class="systems-table">
+        <thead>
+          <tr>
+            <th>Tier</th>
+            <th>Size</th>
+            <th>Best for</th>
+            <th>Monthly bill</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="tier">Tier 1 — Entry</span></td>
+            <td>64–100kWh</td>
+            <td>Arable farms, solar add-on</td>
+            <td>£500–£1,500/mo</td>
+          </tr>
+          <tr>
+            <td><span class="tier">Tier 2 — Core</span></td>
+            <td>128kWh</td>
+            <td>Dairy / poultry, 3-phase commercial</td>
+            <td>£1,500–£4,000/mo</td>
+          </tr>
+          <tr>
+            <td><span class="tier">Tier 3 — Large</span></td>
+            <td>200–288kWh+</td>
+            <td>Food production, light industrial</td>
+            <td>£4,000+/mo</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="margin-top:16px;font-size:12px;color:var(--grey);">Contact us for a tailored quote following a free site survey.</p>
+      <br>
+      <button class="btn-primary" onclick="navigate('calculator')">Calculate Your Savings</button>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-logo">POWER PACK SYSTEMS LTD</div>
+    <div class="footer-links">
+      <a href="#" onclick="navigate('home')">Home</a>
+      <a href="#" onclick="navigate('about')">About</a>
+      <a href="#" onclick="navigate('calculator')">Calculator</a>
+      <a href="#" onclick="navigate('contact')">Contact</a>
+    </div>
+    <div class="footer-copy">© 2026 Power Pack Systems Ltd · UK</div>
+  </footer>
+</div>
+
+<!-- ============================================================
+     PAGE: ABOUT
+     ============================================================ -->
+<div class="page" id="page-about">
+
+  <section class="about-hero">
+    <div class="container about-hero-inner">
+      <div>
+        <span class="eyebrow">Who we are</span>
+        <h1 class="section-title" style="font-size:clamp(60px,9vw,130px);">Built by<br>an <span class="outline">electrician.</span></h1>
+      </div>
+      <div>
+        <p class="body-text" style="max-width:100%;">Power Pack Systems was founded by a qualified electrician with years of hands-on commercial and solar installation experience. We started this business because we saw farms and commercial properties paying huge electricity bills when the technology to slash them had become both reliable and genuinely affordable.</p>
+        <br>
+        <p class="body-text" style="max-width:100%;">We're not a sales organisation with subcontractors. Every survey, design and installation is handled by our own qualified team. We know what works, what lasts, and how to make the numbers stack up for real businesses.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Values -->
+  <section class="section">
+    <div class="container">
+      <span class="eyebrow">What we stand for</span>
+      <h2 class="section-title">Our <span class="outline">Values.</span></h2>
+      <div class="values-grid">
+        <div class="value-card fade-in">
+          <div class="value-num">01</div>
+          <div class="value-title">Honesty about numbers</div>
+          <div class="value-body">We only recommend a system if the savings case is real. We show you our calculations before you spend a penny, and we stand behind our projections.</div>
+        </div>
+        <div class="value-card fade-in">
+          <div class="value-num">02</div>
+          <div class="value-title">Craft over shortcuts</div>
+          <div class="value-body">Tier 1 components. Proper cable management. Full documentation. Systems built by people who care what's inside the enclosure, not just what it looks like on an invoice.</div>
+        </div>
+        <div class="value-card fade-in">
+          <div class="value-num">03</div>
+          <div class="value-title">Long-term thinking</div>
+          <div class="value-body">We design for 20-year performance, not 5-year warranties. Our component choices, commissioning standards, and after-care reflect that.</div>
+        </div>
+        <div class="value-card fade-in">
+          <div class="value-num">04</div>
+          <div class="value-title">Straight talking</div>
+          <div class="value-body">No jargon, no pressure, no sales scripts. We talk to clients the way we'd want to be talked to — directly, clearly, and with all the information on the table.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Credentials -->
+  <section class="creds-section">
+    <div class="container">
+      <span class="eyebrow">Qualifications & certifications</span>
+      <h2 class="section-title">Fully <span class="outline">Certified.</span></h2>
+      <div class="creds-grid">
+        <div class="cred-card fade-in">
+          <div class="cred-title">18th Edition</div>
+          <div class="cred-body">IET Wiring Regulations BS 7671 — the standard for all UK electrical installation</div>
+        </div>
+        <div class="cred-card fade-in">
+          <div class="cred-title">MCS Certified</div>
+          <div class="cred-body">MIS 3012 Battery Storage & Solar PV — required for SEG export payments</div>
+        </div>
+        <div class="cred-card fade-in">
+          <div class="cred-title">Victron Certified</div>
+          <div class="cred-body">Registered Victron Energy installer — trained on all MultiPlus, MPPT and Cerbo systems</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Process -->
+  <section class="process-section">
+    <div class="container">
+      <span class="eyebrow">How it works</span>
+      <h2 class="section-title">The <span class="outline">Process.</span></h2>
+      <div class="process-steps">
+        <div class="step fade-in">
+          <div class="step-dot"></div>
+          <div class="step-num">Step 01</div>
+          <div class="step-title">Free site visit</div>
+          <div class="step-body">We visit your site, review meter data and your DNO connection, and understand your energy profile.</div>
+        </div>
+        <div class="step fade-in">
+          <div class="step-dot"></div>
+          <div class="step-num">Step 02</div>
+          <div class="step-title">Savings proposal</div>
+          <div class="step-body">You receive a written ROI proposal — projected savings, payback period, system spec and fixed price.</div>
+        </div>
+        <div class="step fade-in">
+          <div class="step-dot"></div>
+          <div class="step-num">Step 03</div>
+          <div class="step-title">DNO & design</div>
+          <div class="step-body">We submit G98/G99 to your DNO and finalise the system design. You don't have to deal with any paperwork.</div>
+        </div>
+        <div class="step fade-in">
+          <div class="step-dot"></div>
+          <div class="step-num">Step 04</div>
+          <div class="step-title">Installation</div>
+          <div class="step-body">Typically 2–5 days on site. Minimal disruption. Full project managed by our qualified team.</div>
+        </div>
+        <div class="step fade-in">
+          <div class="step-dot"></div>
+          <div class="step-num">Step 05</div>
+          <div class="step-title">Handover</div>
+          <div class="step-body">Full commissioning, monitoring setup, documentation pack and MCS certificate. Then we leave you to save money.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-logo">POWER PACK SYSTEMS LTD</div>
+    <div class="footer-links">
+      <a href="#" onclick="navigate('home')">Home</a>
+      <a href="#" onclick="navigate('services')">Services</a>
+      <a href="#" onclick="navigate('calculator')">Calculator</a>
+      <a href="#" onclick="navigate('contact')">Contact</a>
+    </div>
+    <div class="footer-copy">© 2026 Power Pack Systems Ltd · UK</div>
+  </footer>
+</div>
+
+<!-- ============================================================
+     PAGE: CALCULATOR
+     ============================================================ -->
+<div class="page" id="page-calculator">
+
+  <section class="calc-page-hero">
+    <div class="container">
+      <span class="eyebrow">Solar & Battery Energy Storage</span>
+      <h1 class="section-title" style="font-size:clamp(52px,8vw,110px);">How Much<br>Could You <span class="outline">Save?</span></h1>
+      <p class="body-text">Adjust the inputs below to get an instant estimate of your annual energy savings, system cost, and payback period. Then get in touch for a proper site survey with exact numbers.</p>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="calc-layout">
+
+      <!-- INPUTS -->
+      <div class="calc-panel">
+        <div class="calc-panel-title">Your Details</div>
+
+        <div class="field">
+          <label>Monthly electricity bill</label>
+          <div class="range-row">
+            <span class="range-edge">£500</span>
+            <span class="range-val" id="billDisplay">£2,500</span>
+            <span class="range-edge">£8,000</span>
+          </div>
+          <input type="range" id="bill" min="500" max="8000" step="100" value="2500">
+          <div class="field-hint">Your average monthly electricity spend</div>
+        </div>
+
+        <div class="field">
+          <label>Solar PV situation</label>
+          <select id="solar">
+            <option value="none">No solar — battery storage only</option>
+            <option value="small">Existing solar (up to 50kW)</option>
+            <option value="large" selected>Existing solar (50kW+)</option>
+            <option value="new_small">Install solar + storage (up to 50kW)</option>
+            <option value="new_large">Install solar + storage (50kW+)</option>
+          </select>
+          <div class="field-hint">Combined solar & storage maximises savings</div>
+        </div>
+
+        <div class="field">
+          <label>Peak electricity rate (p/kWh)</label>
+          <div class="range-row">
+            <span class="range-edge">20p</span>
+            <span class="range-val" id="rateDisplay">35p</span>
+            <span class="range-edge">60p</span>
+          </div>
+          <input type="range" id="rate" min="20" max="60" step="1" value="35">
+          <div class="field-hint">Your peak rate — check your energy bill</div>
+        </div>
+
+        <div class="field">
+          <label>Business type</label>
+          <select id="farmType">
+            <option value="commercial" selected>Commercial / Industrial</option>
+            <option value="dairy">Dairy farm</option>
+            <option value="poultry">Poultry / Pig unit</option>
+            <option value="arable">Arable / Storage</option>
+          </select>
+          <div class="field-hint">Affects your energy demand profile</div>
+        </div>
+      </div>
+
+      <!-- RESULTS -->
+      <div class="results-col">
+        <div class="result-card highlight">
+          <div class="result-label">Estimated Annual Saving</div>
+          <div class="result-big" id="annualSaving">£18,400</div>
+          <div class="result-bar"><div class="result-bar-fill" id="savingBar" style="width:52%"></div></div>
+          <div class="result-sub" id="savingDesc">Reducing your bill from ~£30,000 to ~£11,600/yr</div>
+        </div>
+
+        <div class="result-card">
+          <div class="result-label">Recommended System</div>
+          <div class="result-big" id="systemCost" style="font-size:32px;padding-top:8px;"></div>
+          <div class="result-sub" id="systemDesc">Fully installed, commissioned & DNO-approved</div>
+          <div style="margin-top:10px;display:inline-block;border:1px solid rgba(245,244,240,0.2);padding:4px 14px;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--grey);" id="systemBadge">128kWh · 3-phase recommended</div>
+        </div>
+
+        <div class="result-card">
+          <div class="result-label">Payback Period</div>
+          <div class="result-big" id="payback">3.2 yrs</div>
+          <div class="result-sub" id="paybackDesc">Then pure savings for the remaining 17+ year system life</div>
+        </div>
+
+        <div class="result-card">
+          <div class="result-label">20-Year Net Benefit</div>
+          <div class="result-big" id="netBenefit">£310,000</div>
+          <div class="result-sub">After full system cost recovery</div>
+        </div>
+
+        <div class="calc-cta-box">
+          <h3>Get exact numbers</h3>
+          <p>These are illustrative estimates. A free site visit gives you precise figures based on your actual meter data, tariff structure, and grid connection.</p>
+          <button class="btn-primary" onclick="navigate('contact')">Book a Free Site Visit</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-logo">POWER PACK SYSTEMS LTD</div>
+    <div class="footer-links">
+      <a href="#" onclick="navigate('home')">Home</a>
+      <a href="#" onclick="navigate('services')">Services</a>
+      <a href="#" onclick="navigate('about')">About</a>
+      <a href="#" onclick="navigate('contact')">Contact</a>
+    </div>
+    <div class="footer-copy">© 2026 Power Pack Systems Ltd · UK · Estimates are illustrative only</div>
+  </footer>
+</div>
+
+<!-- ============================================================
+     PAGE: CONTACT
+     ============================================================ -->
+<div class="page" id="page-contact">
+
+  <section class="contact-hero">
+    <div class="container">
+      <span class="eyebrow">Get in touch</span>
+      <h1 class="section-title" style="font-size:clamp(60px,9vw,130px);">Let's Talk<br><span class="outline">Numbers.</span></h1>
+      <p class="body-text">Book a free site visit or send us your details. We'll come to you, review your energy setup, and give you a savings projection with no obligation.</p>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="contact-layout">
+
+      <!-- Info -->
+      <div class="contact-info">
+        <div class="contact-info-item">
+          <div class="contact-info-label">Email</div>
+          <div class="contact-info-val"><a href="mailto:info@powerpacksystems.co.uk">info@powerpacksystems.co.uk</a></div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-info-label">Coverage</div>
+          <div class="contact-info-val">UK Wide</div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-info-label">Response time</div>
+          <div class="contact-info-val">Within 1 working day</div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-info-label">Site visits</div>
+          <div class="contact-info-val">Free, no obligation</div>
+        </div>
+        <br><br>
+        <p style="font-size:13px;color:var(--grey);line-height:1.7;">Not ready for a site visit yet? Use our <a href="#" onclick="navigate('calculator')" style="color:var(--white);text-decoration:underline;text-underline-offset:3px;">savings calculator</a> to get an instant estimate first.</p>
+      </div>
+
+      <!-- Form -->
+      <div>
+        <div id="contactForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label>First name</label>
+              <input type="text" id="fname" placeholder="John">
+            </div>
+            <div class="form-group">
+              <label>Last name</label>
+              <input type="text" id="lname" placeholder="Smith">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Email address</label>
+            <input type="email" id="email" placeholder="john@yourbusiness.co.uk">
+          </div>
+          <div class="form-group">
+            <label>Phone number</label>
+            <input type="tel" id="phone" placeholder="07700 000000">
+          </div>
+          <div class="form-group">
+            <label>Business type</label>
+            <select id="bizType">
+              <option value="">Select your business type</option>
+              <option>Commercial / Industrial</option>
+              <option>Dairy farm</option>
+              <option>Poultry / Pig unit</option>
+              <option>Arable / Grain storage</option>
+              <option>Food production</option>
+              <option>Other agricultural</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>What are you interested in?</label>
+            <select id="interest">
+              <option value="">Select an option</option>
+              <option>Solar PV only</option>
+              <option>Battery storage only</option>
+              <option>Solar + Battery storage</option>
+              <option>Not sure — need advice</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Monthly electricity bill (approximate)</label>
+            <select id="billSize">
+              <option value="">Select a range</option>
+              <option>Under £500/month</option>
+              <option>£500–£1,500/month</option>
+              <option>£1,500–£3,000/month</option>
+              <option>£3,000–£6,000/month</option>
+              <option>Over £6,000/month</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Message (optional)</label>
+            <textarea id="message" placeholder="Tell us anything useful — existing solar, grid connection size, urgency, or anything else..."></textarea>
+          </div>
+          <button class="form-submit" onclick="submitForm()">Send Enquiry →</button>
+        </div>
+
+        <div class="form-success" id="formSuccess">
+          <h3>Message Received</h3>
+          <p>Thanks for getting in touch. We'll be back to you within one working day to arrange a free site visit.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-logo">POWER PACK SYSTEMS LTD</div>
+    <div class="footer-links">
+      <a href="#" onclick="navigate('home')">Home</a>
+      <a href="#" onclick="navigate('services')">Services</a>
+      <a href="#" onclick="navigate('about')">About</a>
+      <a href="#" onclick="navigate('calculator')">Calculator</a>
+    </div>
+    <div class="footer-copy">© 2026 Power Pack Systems Ltd · UK</div>
+  </footer>
+</div>
+
+<!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
+<script>
+
+// ---- ROUTING ----
+function navigate(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelectorAll('[data-page]').forEach(a => {
+    a.classList.toggle('active', a.dataset.page === page);
+  });
+  window.scrollTo({ top: 0, behavior: 'instant' });
+  observeFadeIns();
+  return false;
+}
+
+// ---- MOBILE MENU ----
+function toggleMobile() {
+  const menu = document.getElementById('mobileMenu');
+  const burger = document.getElementById('hamburger');
+  menu.classList.toggle('open');
+  burger.classList.toggle('open');
+}
+
+// ---- SCROLL ANIMATIONS ----
+function observeFadeIns() {
+  const els = document.querySelectorAll('.page.active .fade-in');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  els.forEach(el => io.observe(el));
+}
+
+window.addEventListener('load', observeFadeIns);
+
+// ---- CALCULATOR ----
+const farmProfile = {
+  commercial: { peakLoad: 0.65 },
+  dairy:      { peakLoad: 0.68 },
+  poultry:    { peakLoad: 0.72 },
+  arable:     { peakLoad: 0.55 },
+};
+const solarBonus = { none: 0, small: 0.08, large: 0.18, new_small: 0.14, new_large: 0.24 };
+const systemSizes = [
+  { kWh: 64,  label: '64kWh · single phase',     minBill: 500  },
+  { kWh: 100, label: '100kWh · 3-phase',          minBill: 1500 },
+  { kWh: 128, label: '128kWh · 3-phase',          minBill: 2500 },
+  { kWh: 200, label: '200kWh · 3-phase',          minBill: 4500 },
+  { kWh: 288, label: '288kWh · large commercial', minBill: 6000 },
+];
+
+function pickSystem(bill) {
+  for (let i = systemSizes.length - 1; i >= 0; i--) {
+    if (bill >= systemSizes[i].minBill) return systemSizes[i];
+  }
+  return systemSizes[0];
+}
+function fmt(n) { return '£' + Math.round(n).toLocaleString('en-GB'); }
+
+function calcUpdate() {
+  const bill = +document.getElementById('bill').value;
+  const rate = +document.getElementById('rate').value;
+  const solar = document.getElementById('solar').value;
+  const type  = document.getElementById('farmType').value;
+  const annualBill = bill * 12;
+  let savingRate = farmProfile[type].peakLoad * (rate / 35);
+  savingRate += solarBonus[solar];
+  savingRate = Math.min(savingRate, 0.64);
+  const saving = annualBill * savingRate;
+  const sys = pickSystem(bill);
+
+  document.getElementById('billDisplay').textContent = '£' + bill.toLocaleString('en-GB');
+  document.getElementById('rateDisplay').textContent = rate + 'p';
+  document.getElementById('annualSaving').textContent = fmt(saving);
+  document.getElementById('savingDesc').textContent = `Reducing your annual bill from ~${fmt(annualBill)} to ~${fmt(annualBill - saving)}`;
+  document.getElementById('savingBar').style.width = Math.round(savingRate * 100) + '%';
+  document.getElementById('systemCost').textContent = '';
+  document.getElementById('systemDesc').textContent = 'Contact us for a tailored quote after a free site survey';
+  document.getElementById('systemBadge').textContent = sys.label + ' recommended';
+  document.getElementById('payback').textContent = 'Get a quote';
+  document.getElementById('paybackDesc').textContent = 'We\'ll calculate your exact payback period based on your site survey and tariff';
+  document.getElementById('netBenefit').textContent = fmt(saving * 20);
+}
+
+['bill','rate','solar','farmType'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('input', calcUpdate);
+});
+
+calcUpdate();
+
+// ---- CONTACT FORM (Formspree) ----
+// TO ACTIVATE: Replace YOUR_FORM_ID below with your Formspree form ID
+// 1. Sign up free at formspree.io
+// 2. Create a new form — you'll get an ID like "xyzabc12"
+// 3. Replace YOUR_FORM_ID with that ID and you're done
+const FORMSPREE_ID = 'YOUR_FORM_ID';
+
+async function submitForm() {
+  const fname   = document.getElementById('fname').value.trim();
+  const email   = document.getElementById('email').value.trim();
+  const phone   = document.getElementById('phone').value.trim();
+  const bizType = document.getElementById('bizType').value;
+  const interest= document.getElementById('interest').value;
+  const billSize= document.getElementById('billSize').value;
+  const message = document.getElementById('message').value.trim();
+  const btn     = document.querySelector('.form-submit');
+
+  // Basic validation
+  if (!fname) { highlight('fname'); return; }
+  if (!email || !email.includes('@')) { highlight('email'); return; }
+
+  // Swap button state
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+
+  if (FORMSPREE_ID === 'YOUR_FORM_ID') {
+    // No ID set yet — simulate success so layout can be previewed
+    showSuccess();
+    return;
+  }
+
+  try {
+    const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name:          fname + ' ' + document.getElementById('lname').value.trim(),
+        email,
+        phone,
+        business_type: bizType,
+        interest,
+        monthly_bill:  billSize,
+        message
+      })
+    });
+
+    if (res.ok) {
+      showSuccess();
+    } else {
+      btn.textContent = 'Failed — please try again';
+      btn.disabled = false;
+    }
+  } catch (err) {
+    btn.textContent = 'Failed — please try again';
+    btn.disabled = false;
+  }
+}
+
+function highlight(id) {
+  const el = document.getElementById(id);
+  el.style.borderColor = 'rgba(245,244,240,0.5)';
+  el.focus();
+}
+
+function showSuccess() {
+  document.getElementById('contactForm').style.display = 'none';
+  document.getElementById('formSuccess').style.display = 'block';
+}
+
+</script>
+</body>
+</html>
