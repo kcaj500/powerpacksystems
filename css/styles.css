@@ -1015,20 +1015,22 @@ img {
   }
 
   .feature-strip-grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .feature-strip-item,
-  .feature-strip-item:nth-child(3) {
+  .feature-strip-item {
+    flex-direction: column;
+    min-width: 0;
+    gap: 8px;
+    padding: 14px 6px;
     border-right: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
   }
 
-  .feature-strip-item:nth-child(2n) {
+  .feature-strip-item:nth-child(3n) {
     border-right: 0;
   }
 
-  .feature-strip-item:nth-last-child(-n+2) {
+  .feature-strip-item:nth-last-child(-n+3) {
     border-bottom: 0;
   }
 
