@@ -1200,3 +1200,22 @@ summary:focus-visible, textarea:focus-visible { outline: 3px solid #777; outline
  .mobile-menu-button { justify-self:end; }
  .dno-feature .section-heading { font-size:36px; }
 }
+
+/* Mobile menu icon: explicit brand colour also prevents blue iOS button text. */
+.mobile-menu-button {
+  appearance: none;
+  -webkit-appearance: none;
+  color: var(--ink);
+  width: 44px;
+  height: 44px;
+  padding: 9px;
+  cursor: pointer;
+}
+.mobile-menu-button svg {
+  display: block;
+  margin: auto;
+}
+.mobile-menu-button:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
