@@ -1221,3 +1221,12 @@ summary:focus-visible, textarea:focus-visible { outline: 3px solid #777; outline
   outline: 2px solid var(--ink);
   outline-offset: 3px;
 }
+
+/* Draft: container build introduction and handover information. */
+.hero-build-note { max-width: 650px; margin: 18px 0 0; padding-left: 16px; border-left: 3px solid var(--ink); font-size: 15px; line-height: 1.6; }
+.handover-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 42px; padding-top: 32px; border-top: 1px solid var(--line); }
+.handover-panel .compact-heading { margin-bottom: 16px; }
+.handover-panel p { max-width: 540px; }
+.handover-list { margin: 0; padding-left: 22px; align-self: center; }
+.handover-list li { padding: 8px 0 8px 4px; }
+@media (max-width: 760px) { .handover-panel { grid-template-columns: 1fr; gap: 16px; } }
