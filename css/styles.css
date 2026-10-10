@@ -461,7 +461,8 @@ img {
 
 .solution-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
   gap: 28px;
 }
 
@@ -1274,13 +1275,9 @@ summary:focus-visible, textarea:focus-visible { outline: 3px solid #777; outline
  .primary-nav { max-height:calc(100dvh - 110px); overflow-y:auto; }
 }
 
-.offgrid-feature { display:grid; grid-template-columns:1fr 1.5fr; gap:32px; padding:30px; margin-top:28px; border:1px solid var(--line); background:var(--white); }
-.offgrid-feature p { margin-top:0; }
-@media(max-width:740px) { .offgrid-feature { grid-template-columns:1fr; gap:12px; padding:22px; } }
 
-/* Off-grid concept image. */
-.offgrid-feature { grid-template-columns:1fr 1fr; align-items:center; }
-.offgrid-visual { margin:0; }
-.offgrid-visual img { display:block; width:100%; height:auto; }
-.offgrid-visual figcaption { font-size:12px; padding-top:8px; }
-@media(max-width:740px) { .offgrid-feature { grid-template-columns:1fr; } }
+/* All five solution routes share the same card dimensions. */
+.solution-card { display: flex; flex-direction: column; min-width: 0; }
+.solution-visual { flex: 0 0 auto; }
+.solution-card-body { display: flex; flex-direction: column; flex: 1; }
+.solution-card-body .solution-feature-link { margin-top: auto; padding-top: 12px; }
